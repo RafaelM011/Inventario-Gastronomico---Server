@@ -13,8 +13,8 @@ import { ReadFile } from './controllers/Excel.js';
 
 //Server
 const server = express();
-const PORT = 4000;
-server.listen(PORT || 3000, () =>{
+const PORT = process.env.PGPORT || 4000;
+server.listen(PORT, () =>{
     console.log(`App is running on port ${PORT}`);
 });
 
@@ -26,16 +26,16 @@ server.use(express.json());
 const database = knex({
     client: 'pg',
     connection: {
-      host : '127.0.0.1',
-      port : 5432,
-      user : 'postgres',
-      password : process.env.POSTGRESQL_DATABASE_PASSWORD,
-      database : 'Inventario'
+      host : process.env.PGHOST || '127.0.0.1',
+      port : PORT || 5432,
+      user : process.env.PGUSER || 'postgres',
+      password : process.env.PGPASSWORD || process.env.POSTGRESQL_DATABASE_PASSWORD,
+      database : process.env.PGDATABASE || 'Inventario'
     }
 })
 
 // Get Request, testing
-server.get('/', (req,res) => res.json("It's working!"));
+server.get('/', (req,res) => res.json("App is running properly"));
 //Put data to register a new user
 server.put('/register', Register(database, bcrypt));
 //Post data to log in
