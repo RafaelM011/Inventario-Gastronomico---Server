@@ -13,7 +13,7 @@ import { ReadFile } from './controllers/Excel.js';
 
 //Server
 const server = express();
-const PORT = process.env.PORT || 4000;
+const PORT = 4000;
 server.listen(PORT, () =>{
     console.log(`App is running on port ${PORT}`);
 });

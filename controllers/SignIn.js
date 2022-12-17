@@ -9,7 +9,7 @@ const SignIn = (database, bcrypt) => (req, res) => {
             database('users').where({username})
             .select('*')
             .then( data => {
-                res.status(200).json(data[0]);
+                res.json(data[0]);
             })
         }else{
             res.status(400).json('Username or Password is incorrect');

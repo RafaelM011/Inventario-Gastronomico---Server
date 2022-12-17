@@ -5,6 +5,7 @@ export const ImportRecipes = (database) => (req,res) => {
     .where({sucursal})
     .select('*')
     .then( data => res.json(data))
+    .catch( err => res.status(400).json(err.message)) 
 }
 
 export const AddRecipe = (database) => (req,res) => {
@@ -21,8 +22,10 @@ export const AddRecipe = (database) => (req,res) => {
     .then( () => {
         database('recetas').where({sucursal})
         .select('*')
-        .then( data => res.json(data))    
+        .then( data => res.json(data))  
+        .catch( err => res.status(400).json(err.message))   
     })  
+    .catch( err => res.status(400).json(err.message)) 
 }
 
 export const UpdateRecipe = (database) => (req, res) => {
@@ -39,6 +42,8 @@ export const UpdateRecipe = (database) => (req, res) => {
     .then( () => {
         database('recetas').where({sucursal})
         .select('*')
-        .then( data => res.json(data));
+        .then( data => res.json(data))
+        .catch( err => res.status(400).json(err.message)) 
     })
+    .catch( err => res.status(400).json(err.message)) 
 }

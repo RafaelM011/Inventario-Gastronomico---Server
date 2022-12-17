@@ -3,6 +3,7 @@ export const ImportIngredientes = (database) => (req,res) => {
     database('ingredientes').where({sucursal})
     .select('*')
     .then( data => res.json(data))
+    .catch( err => res.status(400).json(err.message)) 
 }
 
 export const ImportSucursales = (database) => (req,res) => {
@@ -10,4 +11,5 @@ export const ImportSucursales = (database) => (req,res) => {
     database('sucursales').where({username})
     .select('*')
     .then(data => res.json(data))
+    .catch(err => res.status(400).json(err.message)) 
 }

@@ -8,7 +8,8 @@ export const AddIngredient = (database) => (req, res) => {
                 const query = trx('ingredientes')
                 .insert(ingrediente)
                 .select('*')
-                .transacting(trx)                
+                .transacting(trx)
+                .catch( err => res.status(400).json(err.message))                
                 queries.push(query);
             })
 
@@ -20,6 +21,7 @@ export const AddIngredient = (database) => (req, res) => {
         database('ingredientes')
         .select('*')
         .then (data => res.json(data))
+        .catch( err => res.status(400).json(err.message)) 
     }
     request();
 }
@@ -38,7 +40,9 @@ export const RemoveIngredient = (database) => (req, res) => {
         database('ingredientes')
         .select('*')
         .then( data => res.json(data))
+        .catch( err => res.status(400).json(err.message)) 
     })
+    .catch( err => res.status(400).json(err.message)) 
 }
 
 export const DecreaseIngredientAmount = (database) => (req, res) => {
@@ -52,7 +56,8 @@ export const DecreaseIngredientAmount = (database) => (req, res) => {
                 .where({sucursal,nombre})
                 .update({cantidad: cantidades[i]})
                 .select('*')
-                .transacting(trx);
+                .transacting(trx)
+                .catch( err => res.status(400).json(err.message))
                 queries.push(query);
             });
 
@@ -63,7 +68,8 @@ export const DecreaseIngredientAmount = (database) => (req, res) => {
 
         database('ingredientes')
         .select('*')
-        .then( data => res.json(data));
+        .then( data => res.json(data))
+        .catch( err => res.status(400).json(err.message)) 
     }
 
     request();
@@ -84,7 +90,8 @@ export const UpgradeIngredientInfo = (database) => (req, res) => {
                     cantidad: ingrediente.cantidad,
                     unidad: ingrediente.unidad
                 })
-                .transacting(trx)                
+                .transacting(trx)  
+                .catch( err => res.status(400).json(err.message))               
                 queries.push(query);
             })
 
@@ -96,6 +103,7 @@ export const UpgradeIngredientInfo = (database) => (req, res) => {
         database('ingredientes')
         .select('*')
         .then (data => res.json(data))
+        .catch( err => res.status(400).json(err.message)) 
     }
     request();
 }
