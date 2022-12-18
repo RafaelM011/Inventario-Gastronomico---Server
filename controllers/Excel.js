@@ -1,21 +1,25 @@
+import { json } from 'express';
 import XLSX from 'xlsx';
 
 export const ReadFile = (req,res) =>  
 {
-    const file = XLSX.readFile('data.xlsx');
+    // const file = XLSX.readFile('data.xlsx');
+    const file = XLSX.readFile('DIGEPRES.xlsx');
   
     let data = []
-      
+    let temp;
+
     const sheets = file.SheetNames;
-    for(let i = 0; i < sheets.length; i++)
-    {
-       const temp = XLSX.utils.sheet_to_json(
-            file.Sheets[file.SheetNames[i]])
-       temp.forEach((res) => {
-          data.push(res)
-       })
-    }
-    console.log(data);
+    // for(let i = 0; i < sheets.length; i++)
+    // {
+    //    temp = XLSX.utils.sheet_to_json(file.Sheets[sheets[i]])
+    //    temp.forEach( sheet => {
+    //      data.push(sheet);
+    //    })
+    // }
+
+    data = XLSX.utils.sheet_to_json(file.Sheets[sheets[1]])
+    res.json(data);
 }
 
 // function WriteFile(file = null,file2 = null,file3 = null)
