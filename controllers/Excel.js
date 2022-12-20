@@ -1,52 +1,45 @@
-import { json } from 'express';
 import XLSX from 'xlsx';
 
 export const ReadFile = (req,res) =>  
 {
-    // const file = XLSX.readFile('data.xlsx');
-    const file = XLSX.readFile('DIGEPRES.xlsx');
-  
+    const file = XLSX.readFile('data.xlsx');
     let data = []
-    let temp;
 
     const sheets = file.SheetNames;
-    // for(let i = 0; i < sheets.length; i++)
-    // {
-    //    temp = XLSX.utils.sheet_to_json(file.Sheets[sheets[i]])
-    //    temp.forEach( sheet => {
-    //      data.push(sheet);
-    //    })
-    // }
+    for(let i = 0; i < sheets.length; i++)
+    {
+       let temp = XLSX.utils.sheet_to_json(file.Sheets[sheets[i]])
+       temp.forEach( sheet => {
+         data.push(sheet);
+       })
+    }
 
-    data = XLSX.utils.sheet_to_json(file.Sheets[sheets[1]])
     res.json(data);
 }
 
-// function WriteFile(file = null,file2 = null,file3 = null)
-// {
-//     if(!file){file = Generate()}
+export const WriteFile = (database) => async (req,res) => {
  
-//     const ws1 = XLSX.utils.json_to_sheet(file)
-//     const ws2 = XLSX.utils.json_to_sheet(file2)
-//     const ws3 = XLSX.utils.json_to_sheet(file3)
+    const ingredientsData = await database('ingredientes').select('*').then(data => data);
+    const recipesData = await database('recetas').select('*').then(data => data);
+    const newBook = XLSX.utils.book_new()
+    // const ingredientsWorkSheet = XLSX.utils.json_to_sheet()
+    // const recipesWorkSheet = XLSX.utils.json_to_sheet()
       
-//     const newBook = XLSX.utils.book_new()
-
-//     newBook.Props = {
-//         Title: "Formato Inventario Gastronómico",
-//         Subject: "Almacen",
-//         Author: "Alan Franco - Rafael Martinez",
-//         CreatedDate: new Date(2022, 11, 25)
-//     };
+    newBook.Props = {
+        Title: "Inventario Gastronómico",
+        Subject: "Almacen",
+        Author: "Alan Franco - Rafael Martinez",
+        CreatedDate: new Date()
+    };
     
-//     XLSX.utils.book_append_sheet(newBook,ws1,"Inventarios") 
-//     XLSX.utils.book_append_sheet(newBook,ws2,"Recetas") 
-//     XLSX.utils.book_append_sheet(newBook,ws3,"Ingredientes") 
+    // XLSX.utils.book_append_sheet(newBook,ws1,"Inventarios") 
+    // XLSX.utils.book_append_sheet(newBook,ws2,"Recetas") 
+    // XLSX.utils.book_append_sheet(newBook,ws3,"Ingredientes") 
     
-//     var wopts = { bookType:"xlsx", bookSST:false, type:"array"};
+    // var wopts = { bookType:"xlsx", bookSST:false, type:"array"};
 
-//     return {data:newBook, filename:"/InventoryAtlas.xlsx",opts: wopts};
-// }
+    // return {data:newBook, filename:"/InventoryAtlas.xlsx",opts: wopts};
+}
 
 /*
 function Generate()

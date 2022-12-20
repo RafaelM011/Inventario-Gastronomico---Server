@@ -9,7 +9,7 @@ import SignIn from './controllers/SignIn.js';
 import { ImportSucursales, ImportIngredientes } from './controllers/Import.js';
 import { AddIngredient, DecreaseIngredientAmount, RemoveIngredient, UpgradeIngredientInfo } from './controllers/ManageIngredient.js';
 import { AddRecipe, ImportRecipes, UpdateRecipe } from './controllers/ManageRecipes.js';
-import { ReadFile } from './controllers/Excel.js';
+import { ReadFile, WriteFile } from './controllers/Excel.js';
 
 //Server
 const server = express();
@@ -58,9 +58,12 @@ server.put('/addrecipe', AddRecipe(database));
 server.post('/getrecipes', ImportRecipes(database));
 //Update recipes on database
 server.post('/updaterecipe', UpdateRecipe(database));
-//Get excel from server
-server.get('/getexcel', ReadFile);
+//Read excel uploaded from client
+server.get('/readexcel', ReadFile);
+//Write excel from database info
+server.get('/writeexcel', WriteFile(database));
 
-server.get('/download', (req,res) => {
-    res.download('./elliott-wave-principle.pdf')
-})
+
+// server.get('/download', (req,res) => {
+//     res.download('./elliott-wave-principle.pdf')
+// })
