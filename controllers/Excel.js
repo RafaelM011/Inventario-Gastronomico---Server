@@ -21,55 +21,21 @@ export const WriteFile = (database) => async (req,res) => {
  
     const ingredientsData = await database('ingredientes').select('*').then(data => data);
     const recipesData = await database('recetas').select('*').then(data => data);
-    const newBook = XLSX.utils.book_new()
-    // const ingredientsWorkSheet = XLSX.utils.json_to_sheet()
-    // const recipesWorkSheet = XLSX.utils.json_to_sheet()
-      
-    newBook.Props = {
+    const ingredientsWorkSheet = XLSX.utils.json_to_sheet(ingredientsData);
+    const recipesWorkSheet = XLSX.utils.json_to_sheet(recipesData)
+    const book = XLSX.utils.book_new()
+    const opts = { bookType:"xlsx", bookSST:false, type:"array"};      
+    book.Props = {
         Title: "Inventario Gastronómico",
         Subject: "Almacen",
         Author: "Alan Franco - Rafael Martinez",
         CreatedDate: new Date()
     };
     
-    // XLSX.utils.book_append_sheet(newBook,ws1,"Inventarios") 
-    // XLSX.utils.book_append_sheet(newBook,ws2,"Recetas") 
-    // XLSX.utils.book_append_sheet(newBook,ws3,"Ingredientes") 
+    XLSX.utils.book_append_sheet(book,ingredientsWorkSheet,"Ingredientes") 
+    XLSX.utils.book_append_sheet(book,recipesWorkSheet,"Recetas") 
     
-    // var wopts = { bookType:"xlsx", bookSST:false, type:"array"};
-
-    // return {data:newBook, filename:"/InventoryAtlas.xlsx",opts: wopts};
+    XLSX.writeFileXLSX(book,'Inventario_Gastronomico.xlsx',opts)
+    // console.log(book.Sheets.Recetas.B2);
+    res.json('El archivo de excel ha sido creado.');
 }
-
-/*
-function Generate()
-{
-    let Example = [{
-        Name:faker.company.name(),
-        Ingredient1:faker.commerce.productName(),
-        Ingredient2:faker.commerce.productName(),
-        Ingredient3:faker.commerce.productName(),
-        Ingredient4:faker.commerce.productName(),
-        Ingredient5:faker.commerce.productName(),
-        Qty: {t:"n" ,F:"5+5"}
-    },{
-        Name:faker.company.name(),
-        Ingredient1:faker.commerce.productName(),
-        Ingredient3:faker.commerce.productName(),
-        Ingredient4:faker.commerce.productName(),
-        Ingredient5:faker.commerce.productName(),
-        Qty: {t:"n" ,v:faker.commerce.price()}
-    },{
-        Name:faker.company.name(),
-        Ingredient1:faker.commerce.productName(),
-        Ingredient2:faker.commerce.productName(),
-        Ingredient4:faker.commerce.productName(),
-        Ingredient5:faker.commerce.productName(),
-        Qty: {t:"n" ,v:faker.commerce.price()},
-        Qty2: {t:"n" ,v:faker.commerce.price()},
-        Qty3: {t:"n" ,v:faker.commerce.price()},
-        Qty4: {t:"n" ,f:"5+5"}
-    }]
-    return Example;
-} 
-*/
