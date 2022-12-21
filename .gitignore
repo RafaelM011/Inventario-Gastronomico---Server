@@ -11,6 +11,7 @@
 # production
 /build
 /Inventario_Gastronomico.xlsx
+.env
 
 # misc
 .DS_Store
