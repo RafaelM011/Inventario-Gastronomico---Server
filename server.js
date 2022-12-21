@@ -6,8 +6,8 @@ import dotenv from "dotenv/config";
 
 import Register from './controllers/Register.js';
 import SignIn from './controllers/SignIn.js';
-import { ImportSucursales, ImportIngredientes } from './controllers/Import.js';
-import { AddIngredient, DecreaseIngredientAmount, RemoveIngredient, UpgradeIngredientInfo } from './controllers/ManageIngredient.js';
+import { AddSucursal, ImportSucursales } from './controllers/ManageSucursales.js';
+import { ImportIngredientes, AddIngredient, DecreaseIngredientAmount, RemoveIngredient, UpgradeIngredientInfo } from './controllers/ManageIngredient.js';
 import { AddRecipe, ImportRecipes, UpdateRecipe } from './controllers/ManageRecipes.js';
 import { ReadFile, WriteFile } from './controllers/Excel.js';
 
@@ -26,42 +26,60 @@ server.use(express.json());
 const database = knex({
     client: 'pg',
     connection: {
-      host : process.env.PGHOST || '127.0.0.1',
-      port : process.env.PGPORT || 5432,
-      user : process.env.PGUSER || 'postgres',
-      password : process.env.PGPASSWORD || process.env.POSTGRESQL_DATABASE_PASSWORD,
-      database : process.env.PGDATABASE || 'Inventario'
+      host : process.env.PGHOST ?? '127.0.0.1',
+      port : process.env.PGPORT ?? 5432,
+      user : process.env.PGUSER ?? 'postgres',
+      password : process.env.PGPASSWORD ?? process.env.POSTGRESQL_DATABASE_PASSWORD,
+      database : process.env.PGDATABASE ?? 'Inventario'
     }
 })
 
-// Get Request, testing
-server.get('/', (req,res) => res.json("App is running properly"));
+// Server startup
+server.get('/', (req,res) => res.json("App is running properly"))
+
+/* CREDENTIALS */
+
 //Put data to register a new user
-server.put('/register', Register(database, bcrypt));
+server.put('/register', Register(database, bcrypt))
 //Post data to log in
-server.post('/signin', SignIn(database, bcrypt)) ;
+server.post('/signin', SignIn(database, bcrypt))
+
+/* INGREDIENTS*/ 
+
 //Post data from database/excel
-server.post('/importingredientes', ImportIngredientes(database));
-//Post data from database/excel
-server.post('/importsucursales', ImportSucursales(database));
+server.post('/importingredientes', ImportIngredientes(database))
 //Put ingredients into database
-server.put('/agregaringrediente', AddIngredient(database));
+server.put('/agregaringrediente', AddIngredient(database))
 //Delete ingredients from database
-server.delete('/removeingredient', RemoveIngredient(database));
+server.delete('/removeingredient', RemoveIngredient(database))
 //Decrease ingredientes from recipe info on database
-server.post('/decreaseingredient', DecreaseIngredientAmount(database));
+server.post('/decreaseingredient', DecreaseIngredientAmount(database))
 // Update ingredients info on database
-server.post('/updateingredients', UpgradeIngredientInfo(database));
+server.post('/updateingredients', UpgradeIngredientInfo(database))
+
+/* SUCURSALES */
+
+//Post data from database/excel
+server.post('/importsucursales', ImportSucursales(database))
+//Post new sucursal to datbase
+server.post('/addsucursal', AddSucursal(database))
+
+
+/* RECIPES */
+
 //Add recipe to database
-server.put('/addrecipe', AddRecipe(database));
+server.put('/addrecipe', AddRecipe(database))
 //Get recipes from database
-server.post('/getrecipes', ImportRecipes(database));
+server.post('/getrecipes', ImportRecipes(database))
 //Update recipes on database
-server.post('/updaterecipe', UpdateRecipe(database));
+server.post('/updaterecipe', UpdateRecipe(database))
+
+/* EXCEL */
+
 //Read excel uploaded from client
-server.get('/readexcel', ReadFile);
+server.get('/readexcel', ReadFile)
 //Write excel from database info
-server.get('/writeexcel', WriteFile(database));
+server.get('/writeexcel', WriteFile(database))
 
 
 // server.get('/download', (req,res) => {
