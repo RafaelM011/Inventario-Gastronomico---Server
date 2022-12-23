@@ -75,7 +75,7 @@ export const DecreaseIngredientAmount = (database) => (req, res) => {
             .catch(trx.rollback)
         })
 
-        database('ingredientes')
+        database('ingredientes').where({sucursal})
         .select('*')
         .then( data => res.json(data))
         .catch( err => res.status(400).json(err.message)) 

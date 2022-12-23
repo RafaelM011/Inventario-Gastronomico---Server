@@ -1,8 +1,7 @@
 export const ImportRecipes = (database) => (req,res) => {
     const {sucursal} = req.body;
     
-    database('recetas')
-    .where({sucursal})
+    database('recetas').where({sucursal})
     .select('*')
     .then( data => res.json(data))
     .catch( err => res.status(400).json(err.message)) 
