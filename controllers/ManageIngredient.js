@@ -7,7 +7,8 @@ export const ImportIngredientes = (database) => (req,res) => {
 }
 
 export const AddIngredient = (database) => (req, res) => {
-    const {ingredientes} = req.body;   
+    const {ingredientes} = req.body;
+    const {sucursal} = ingredientes[0];   
     const request = async () => {
         await database.transaction( trx => {
             const queries = []
@@ -26,7 +27,7 @@ export const AddIngredient = (database) => (req, res) => {
             .catch(trx.rollback)
         })
 
-        database('ingredientes')
+        database('ingredientes').where({sucursal})
         .select('*')
         .then (data => res.json(data))
         .catch( err => res.status(400).json(err.message)) 
