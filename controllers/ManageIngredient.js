@@ -85,8 +85,7 @@ export const DecreaseIngredientAmount = (database) => (req, res) => {
 }
 
 export const UpgradeIngredientInfo = (database) => (req, res) => {
-    const { ingredients } = req.body;
-    const {sucursal} = ingredients[0]; 
+    const { ingredients, sucursal } = req.body;
 
     const request = async () => {
         await database.transaction( trx => {
