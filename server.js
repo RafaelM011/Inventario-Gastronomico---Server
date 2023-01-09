@@ -82,7 +82,7 @@ server.post('/updaterecipe', UpdateRecipe(database));
 //Read excel uploaded from client
 server.get('/readexcel', ReadFile);
 //Write excel from database info
-server.get('/writeexcel', WriteFile(database));
+server.post('/writeexcel', WriteFile(database));
 server.post('/ImportXLSX', upload.single('file'),WriteFile(database));
  
 
