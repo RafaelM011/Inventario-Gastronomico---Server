@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../front/InventarioGastronomico"
+		}
+	],
+	"settings": {
+		"jshint.config": "",
+		"jshint.options": {
+			"esversion": 11
+		}
+	}
+}

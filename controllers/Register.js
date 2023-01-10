@@ -18,14 +18,14 @@ const Register = (database, bcrypt) => (req, res) => {
             .into('users')
             .returning('*')
             .then( response => res.json(response[0]))
-            .catch( err => res.status(400).json('This email is already being used'))
+            .catch( err => res.status(400).json('This email is already being used'));
         })
         .then(trx.commit)
         .catch(err => {
             trx.rollback
-            res.json('This username already exist')
-        })
-    })
-}
+            res.json('This username already exist');
+        });
+    });
+};
 
 export default Register;

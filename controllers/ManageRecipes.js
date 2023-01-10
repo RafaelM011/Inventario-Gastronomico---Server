@@ -4,8 +4,8 @@ export const ImportRecipes = (database) => (req,res) => {
     database('recetas').where({sucursal})
     .select('*')
     .then( data => res.json(data))
-    .catch( err => res.status(400).json(err.message)) 
-}
+    .catch( err => res.status(400).json(err.message)); 
+};
 
 export const AddRecipe = (database) => (req,res) => {
     const {sucursal, nombre, ingredientes, cantidades} = req.body;
@@ -14,7 +14,7 @@ export const AddRecipe = (database) => (req,res) => {
         nombre,
         ingredientes,
         cantidades
-    }    
+    };    
 
     database('recetas')
     .insert(recipe)
@@ -22,10 +22,10 @@ export const AddRecipe = (database) => (req,res) => {
         database('recetas').where({sucursal})
         .select('*')
         .then( data => res.json(data))  
-        .catch( err => res.status(400).json(err.message))   
+        .catch( err => res.status(400).json(err.message));   
     })  
-    .catch( err => res.status(400).json(err.message)) 
-}
+    .catch( err => res.status(400).json(err.message)); 
+};
 
 export const UpdateRecipe = (database) => (req, res) => {
     const {id,nombre, ingredientes, cantidades, sucursal} = req.body;
@@ -33,7 +33,7 @@ export const UpdateRecipe = (database) => (req, res) => {
         nombre,
         ingredientes,
         cantidades
-    }
+    };
 
     database('recetas')
     .where({id})
@@ -42,7 +42,7 @@ export const UpdateRecipe = (database) => (req, res) => {
         database('recetas').where({sucursal})
         .select('*')
         .then( data => res.json(data))
-        .catch( err => res.status(400).json(err.message)) 
+        .catch( err => res.status(400).json(err.message)); 
     })
-    .catch( err => res.status(400).json(err.message)) 
-}
+    .catch( err => res.status(400).json(err.message)); 
+};

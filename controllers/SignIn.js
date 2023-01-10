@@ -10,12 +10,12 @@ const SignIn = (database, bcrypt) => (req, res) => {
             .select('*')
             .then( data => {
                 res.json(data[0]);
-            })
+            });
         }else{
             res.status(400).json('Username or Password is incorrect');
         }
     })
     .catch( () => res.status(400).json('Username or Password is incorrect'));
-}
+};
 
-export default SignIn
+export default SignIn;
