@@ -12,10 +12,11 @@ import { AddRecipe, ImportRecipes, UpdateRecipe } from './controllers/ManageReci
 import { ImportingXLSX, ReadFile, WriteFile } from './controllers/Excel.js';
 
 import multer from 'multer';
+import { AddDish } from './controllers/ManagePlatos.js';
 
 //Server
 const server = express();
-const PORT = process.env.PORT ?? 4050;
+const PORT = process.env.PORT ?? 4000;
 const upload = multer({dest: 'uploads/'});
 server.listen(PORT, () =>{
     console.log(`App is running on port ${PORT}`);
@@ -30,7 +31,7 @@ const database = knex({
     client: 'pg',
     connection: {
       host : process.env.PGHOST ?? '127.0.0.1',
-      port : process.env.PGPORT ?? 4000,
+      port : process.env.PGPORT ?? 5432,
       user : process.env.PGUSER ?? 'postgres',
       password : process.env.PGPASSWORD ?? process.env.POSTGRESQL_DATABASE_PASSWORD,
       database : process.env.PGDATABASE ?? 'Inventario'
@@ -47,6 +48,13 @@ server.put('/register', Register(database, bcrypt));
 //Post data to log in
 server.post('/signin', SignIn(database, bcrypt));
 
+/* SUCURSALES */
+
+//Post data from database/excel
+server.post('/importsucursales', ImportSucursales(database));
+//Post new sucursal to datbase
+server.post('/addsucursal', AddSucursal(database));
+
 /* INGREDIENTS*/ 
 
 //Post data from database/excel
@@ -60,14 +68,6 @@ server.post('/decreaseingredient', DecreaseIngredientAmount(database));
 // Update ingredients info on database
 server.post('/updateingredients', UpgradeIngredientInfo(database));
 
-/* SUCURSALES */
-
-//Post data from database/excel
-server.post('/importsucursales', ImportSucursales(database));
-//Post new sucursal to datbase
-server.post('/addsucursal', AddSucursal(database));
-
-
 /* RECIPES */
 
 //Add recipe to database
@@ -76,6 +76,11 @@ server.put('/addrecipe', AddRecipe(database));
 server.post('/getrecipes', ImportRecipes(database));
 //Update recipes on database
 server.post('/updaterecipe', UpdateRecipe(database));
+
+/* DISHES */
+
+//Add dish to database
+server.put('/adddish', AddDish(database))
 
 /* EXCEL */
 

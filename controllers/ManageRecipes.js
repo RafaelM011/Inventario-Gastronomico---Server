@@ -8,13 +8,15 @@ export const ImportRecipes = (database) => (req,res) => {
 };
 
 export const AddRecipe = (database) => (req,res) => {
-    const {sucursal, nombre, ingredientes, cantidades} = req.body;
+    const {sucursal, nombre, ingredientes, cantidades, unidades} = req.body;
     const recipe = {
         sucursal,
         nombre,
-        ingredientes,
-        cantidades
+        ingredientes: `{${ingredientes}}`,
+        cantidades: `{${cantidades}}`,
+        unidades: `{${unidades}}`
     };    
+
 
     database('recetas')
     .insert(recipe)
@@ -28,11 +30,12 @@ export const AddRecipe = (database) => (req,res) => {
 };
 
 export const UpdateRecipe = (database) => (req, res) => {
-    const {id,nombre, ingredientes, cantidades, sucursal} = req.body;
+    const {id,nombre, ingredientes, cantidades, unidades, sucursal} = req.body;
     const updatedInfo = {
         nombre,
         ingredientes,
-        cantidades
+        cantidades,
+        unidades
     };
 
     database('recetas')
