@@ -8,11 +8,11 @@ import Register from './controllers/Register.js';
 import SignIn from './controllers/SignIn.js';
 import { AddSucursal, ImportSucursales } from './controllers/ManageSucursales.js';
 import { ImportIngredientes, AddIngredient, DecreaseIngredientAmount, RemoveIngredient, UpgradeIngredientInfo } from './controllers/ManageIngredient.js';
-import { AddRecipe, ImportRecipes, UpdateRecipe } from './controllers/ManageRecipes.js';
+import { AddRecipe, DecreaseRecipeAmount, ImportRecipes, UpdateRecipe } from './controllers/ManageRecipes.js';
+import { AddDish, fetchDishes } from './controllers/ManagePlatos.js';
 import { ImportingXLSX, ReadFile, WriteFile } from './controllers/Excel.js';
 
 import multer from 'multer';
-import { AddDish } from './controllers/ManagePlatos.js';
 
 //Server
 const server = express();
@@ -63,7 +63,7 @@ server.post('/importingredientes', ImportIngredientes(database));
 server.put('/agregaringrediente', AddIngredient(database));
 //Delete ingredients from database
 server.delete('/removeingredient', RemoveIngredient(database));
-//Decrease ingredientes from recipe info on database
+//Decrease ingredientes in database
 server.post('/decreaseingredient', DecreaseIngredientAmount(database));
 // Update ingredients info on database
 server.post('/updateingredients', UpgradeIngredientInfo(database));
@@ -74,11 +74,15 @@ server.post('/updateingredients', UpgradeIngredientInfo(database));
 server.put('/addrecipe', AddRecipe(database));
 //Get recipes from database
 server.post('/getrecipes', ImportRecipes(database));
+//Decrease ingredientes in database
+server.post('/decreaserecipe', DecreaseRecipeAmount(database));
 //Update recipes on database
 server.post('/updaterecipe', UpdateRecipe(database));
 
 /* DISHES */
 
+//Fetch dishes from database
+server.post('/fetchdishes', fetchDishes(database))
 //Add dish to database
 server.put('/adddish', AddDish(database))
 

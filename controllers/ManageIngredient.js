@@ -1,7 +1,12 @@
 export const ImportIngredientes = (database) => (req,res) => {
-    const {sucursal} = req.body;
-    database('ingredientes').where({sucursal})
-    .select('*')
+    const {usuario, sucursal} = req.body;
+    const condition = {
+        usuario,
+        sucursal
+    }
+
+    database('ingredientes').where(condition)
+    .select('*').orderBy('nombre','asc')
     .then( data => res.json(data))
     .catch( err => res.status(400).json(err.message)) ;
 };
@@ -28,7 +33,7 @@ export const AddIngredient = (database) => (req, res) => {
         });
 
         database('ingredientes').where({sucursal})
-        .select('*')
+        .select('*').orderBy('nombre','asc')
         .then (data => res.json(data))
         .catch( err => res.status(400).json(err.message)) ;
     };
@@ -47,7 +52,7 @@ export const RemoveIngredient = (database) => (req, res) => {
     .del()
     .then( () => {
         database('ingredientes')
-        .select('*')
+        .select('*').orderBy('nombre','asc')
         .then( data => res.json(data))
         .catch( err => res.status(400).json(err.message)) ;
     })
@@ -55,14 +60,14 @@ export const RemoveIngredient = (database) => (req, res) => {
 };
 
 export const DecreaseIngredientAmount = (database) => (req, res) => {
-    const {sucursal, ingredientes, cantidades} = req.body;
-    
+    const {usuario, sucursal, ingredientes, cantidades} = req.body;
+
     const request = async () => {
        await database.transaction( trx => {
             const queries = [];
             ingredientes.forEach( (nombre,i) => {
                 const query = trx('ingredientes')
-                .where({sucursal,nombre})
+                .where({usuario, sucursal,nombre})
                 .update({cantidad: cantidades[i]})
                 .select('*')
                 .transacting(trx)
@@ -75,8 +80,8 @@ export const DecreaseIngredientAmount = (database) => (req, res) => {
             .catch(trx.rollback);
         });
 
-        database('ingredientes').where({sucursal})
-        .select('*')
+        database('ingredientes').where({usuario, sucursal})
+        .select('*').orderBy('nombre','asc')
         .then( data => res.json(data))
         .catch( err => res.status(400).json(err.message)) ;
     };
@@ -110,7 +115,7 @@ export const UpgradeIngredientInfo = (database) => (req, res) => {
         });
 
         database('ingredientes').where({sucursal})
-        .select('*')
+        .select('*').orderBy('nombre','asc')
         .then (data => res.json(data))
         .catch( err => res.status(400).json(err.message)) ;
     };

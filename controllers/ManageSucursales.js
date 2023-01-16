@@ -1,7 +1,7 @@
 export const ImportSucursales = (database) => (req,res) => {
     const {username} = req.body;
     database('sucursales').where({username})
-    .select('*')
+    .select('*').orderBy('name','asc')
     .then(data => res.json(data))
     .catch(err => res.status(400).json(err.message)); 
 };
@@ -17,7 +17,7 @@ export const AddSucursal = (database) => (req,res) => {
     .then( () => {
         database('sucursales')
         .where({username})
-        .select('*')
+        .select('*').orderBy('name','asc')
         .then(data => res.json(data))
         .catch( err => res.status(400).json(err.message));    
     })

@@ -1,32 +1,70 @@
 export const ImportRecipes = (database) => (req,res) => {
-    const {sucursal} = req.body;
+    const {sucursal, usuario} = req.body;
+    const condition = {
+        usuario,
+        sucursal
+    }
     
-    database('recetas').where({sucursal})
-    .select('*')
+    database('recetas').where(condition)
+    .select('*').orderBy('nombre','asc')
     .then( data => res.json(data))
     .catch( err => res.status(400).json(err.message)); 
 };
 
 export const AddRecipe = (database) => (req,res) => {
-    const {sucursal, nombre, ingredientes, cantidades, unidades} = req.body;
+    const {usuario, sucursal, nombre, cantidad, unidad, ingredientes} = req.body;
     const recipe = {
+        usuario,
         sucursal,
         nombre,
-        ingredientes: `{${ingredientes}}`,
-        cantidades: `{${cantidades}}`,
-        unidades: `{${unidades}}`
+        cantidad,
+        unidad,
+        ingredientes: JSON.stringify(ingredientes),
     };    
-
+    const condition = {
+        usuario,
+        sucursal
+    }
 
     database('recetas')
     .insert(recipe)
     .then( () => {
-        database('recetas').where({sucursal})
-        .select('*')
+        database('recetas').where(condition)
+        .select('*').orderBy('nombre','asc')
         .then( data => res.json(data))  
         .catch( err => res.status(400).json(err.message));   
     })  
     .catch( err => res.status(400).json(err.message)); 
+};
+
+export const DecreaseRecipeAmount = (database) => (req, res) => {
+    const {usuario, sucursal, recetas, cantidades} = req.body;
+
+    const request = async () => {
+       await database.transaction( trx => {
+            const queries = [];
+            recetas.forEach( (nombre,i) => {
+                const query = trx('recetas')
+                .where({usuario, sucursal,nombre})
+                .update({cantidad: cantidades[i]})
+                .select('*')
+                .transacting(trx)
+                .catch( err => res.status(400).json(err.message));
+                queries.push(query);
+            });
+
+            Promise.all(queries)
+            .then(trx.commit)
+            .catch(trx.rollback);
+        });
+
+        database('recetas').where({usuario, sucursal})
+        .select('*').orderBy('nombre','asc')
+        .then( data => res.json(data))
+        .catch( err => res.status(400).json(err.message)) ;
+    };
+
+    request();
 };
 
 export const UpdateRecipe = (database) => (req, res) => {
@@ -43,7 +81,7 @@ export const UpdateRecipe = (database) => (req, res) => {
     .update(updatedInfo)
     .then( () => {
         database('recetas').where({sucursal})
-        .select('*')
+        .select('*').orderBy('nombre','asc')
         .then( data => res.json(data))
         .catch( err => res.status(400).json(err.message)); 
     })
