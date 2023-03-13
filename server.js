@@ -38,6 +38,8 @@ const database = knex({
     }
 });
 
+console.log(process.env.PGPASSWORD)
+
 // Server startup
 server.get('/', (req,res) => res.json("App is running properly"));
 
