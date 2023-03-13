@@ -68,22 +68,33 @@ export const DecreaseRecipeAmount = (database) => (req, res) => {
 };
 
 export const UpdateRecipe = (database) => (req, res) => {
-    const {id,nombre, ingredientes, cantidades, unidades, sucursal} = req.body;
-    const updatedInfo = {
-        nombre,
-        ingredientes,
-        cantidades,
-        unidades
-    };
+    const { recipes, sucursal } = req.body;
 
-    database('recetas')
-    .where({id})
-    .update(updatedInfo)
-    .then( () => {
-        database('recetas').where({sucursal})
+    const request = async () => {
+        await database.transaction( trx => {
+            const queries = [];
+            recipes.forEach( recipe => {
+                const query = trx('recetas')
+                .where({id: recipe.id})
+                .update({
+                    nombre: recipe.nombre,
+                    cantidad: recipe.cantidad,
+                    unidad: recipe.unidad
+                })
+                .transacting(trx)  
+                .catch( err => res.status(400).json(err.message))    ;           
+                queries.push(query);
+            });
+
+            Promise.all(queries)
+            .then(trx.commit)
+            .catch(trx.rollback);
+        });
+
+        database('recetas').where({sucursal})   
         .select('*').orderBy('nombre','asc')
-        .then( data => res.json(data))
-        .catch( err => res.status(400).json(err.message)); 
-    })
-    .catch( err => res.status(400).json(err.message)); 
+        .then (data => res.json(data))
+        .catch( err => res.status(400).json(err.message)) ;
+    };
+    request(); 
 };

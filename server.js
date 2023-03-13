@@ -9,7 +9,7 @@ import SignIn from './controllers/SignIn.js';
 import { AddSucursal, ImportSucursales } from './controllers/ManageSucursales.js';
 import { ImportIngredientes, AddIngredient, DecreaseIngredientAmount, RemoveIngredient, UpgradeIngredientInfo } from './controllers/ManageIngredient.js';
 import { AddRecipe, DecreaseRecipeAmount, ImportRecipes, UpdateRecipe } from './controllers/ManageRecipes.js';
-import { AddDish, fetchDishes } from './controllers/ManagePlatos.js';
+import { AddDish, fetchDishes, UpdateDishes } from './controllers/ManagePlatos.js';
 import { ImportingXLSX, ReadFile, WriteFile } from './controllers/Excel.js';
 
 import multer from 'multer';
@@ -85,6 +85,8 @@ server.post('/updaterecipe', UpdateRecipe(database));
 server.post('/fetchdishes', fetchDishes(database))
 //Add dish to database
 server.put('/adddish', AddDish(database))
+//Update dishes on database
+server.post('/updatedishes', UpdateDishes(database));
 
 /* EXCEL */
 
